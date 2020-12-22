@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
+import React ,{useState,useEffect} from 'react';
+import Main from "./Components/Main"
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth"
+import firebase from "./Firebase/Firebase";
+const App =()=> {
+  const [log,setLog]=useState(false);
+  const uiConfig = {
+    signInFlow: 'popup',
+    signInOptions:[
+      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+      firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    ],
+    callbacks: {
+      signInSuccess:()=> false
+      },  
+  };
+  useEffect(()=>{
+    firebase.auth().onAuthStateChanged(user=>{
+      setLog(!!user)
+    } 
+      )
+  })
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" style={{textAlign:'center'}}>
+      <h1>Hello From APP</h1>
+      {log?(<Main></Main>):(<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()}></StyledFirebaseAuth>)}
     </div>
   );
 }
