@@ -1,6 +1,8 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState,useContext} from 'react'
 import firebase from "../Firebase/Firebase"
+import {ContextUid} from "../Context/Context";
 function UpdateDelete({info}) {
+    const uid = useContext(ContextUid)
     // MAKE 3 VARIABLES (UPDATE ,NEW AUTEUR ,NEW TEXT)
     const [update,setUpdate] = useState(false)
     const [uauteur,setUAuteur] = useState(null)
@@ -26,6 +28,17 @@ function UpdateDelete({info}) {
         const db = firebase.database().ref("Crud").child(info.id)
         db.remove()
     }
+
+    const checkUid=()=>{
+     if (info.uid==uid)
+     {
+         return true
+     }
+     else {
+         return false
+     }
+    }
+    console.log(info.uid)
     return (
         <div>
             
@@ -35,8 +48,12 @@ function UpdateDelete({info}) {
                 <ul>
                     <li>l'auteur est: {info.auteur} <br/> message est : {info.text}</li>
                              {/* switch to interface if update true */}
+                
+                             
+                {checkUid()===true && (
+                    <>
                     <button onClick={()=>setUpdate(true)}>Update</button>
-                    <button onClick={removeFunction}>Delete</button>
+                    <button onClick={removeFunction}>Delete</button></>)}
                 </ul>
             </div>)
           }
